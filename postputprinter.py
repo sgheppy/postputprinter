@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request
 from flask_restful import Resource, Api,reqparse
 from flask_socketio import SocketIO, emit
-import json
-import pdb
 
 app = Flask(__name__)
 api = Api(app)
