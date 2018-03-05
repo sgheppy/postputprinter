@@ -17,11 +17,7 @@ class simple_rest_test(Resource):
 
     def print_request(self,prequest):
         print("##### Method: %s #####"%request.method)
-        print("Request form = %s"%request.form)
-        print("Request Args = %s"%request.args)
         print("Json = %s"%request.get_json())
-        print("###################")
-        print("Headers = %s"%request.headers)
         socketio.emit('postput_received',request.get_json())    
 
 @app.route("/web/")
