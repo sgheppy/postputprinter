@@ -7,8 +7,6 @@ import pdb
 app = Flask(__name__)
 api = Api(app)
 
-#app.config['SECRET_KEY'] = 'secret!'
-
 class simple_rest_test(Resource):
     def get(self):
         return {'hello': 'world'}
@@ -38,7 +36,3 @@ api.add_resource(simple_rest_test, '/')
 
 if __name__ == '__main__':
     socketio.run(app,debug=True)
-
-    
-
-    
