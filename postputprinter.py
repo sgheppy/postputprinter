@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request
 from flask_restful import Resource, Api,reqparse
 from flask_socketio import SocketIO, emit
-import json
-import pdb
-
+import datetime
 app = Flask(__name__)
 api = Api(app)
 
@@ -26,7 +24,13 @@ class simple_rest_test(Resource):
         print("Json = %s"%request.get_json())
         print("###################")
         print("Headers = %s"%request.headers)
-        socketio.emit('postput_received',request.get_json())    
+        pktdate = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+        stringdict={'method': request.method,
+                   'args' : request.args,
+                    'form' : request.form,
+                    'timestamp' : pktdate,
+                    'json' : request.get_json()}
+        socketio.emit('postput_received',stringdict)    
 
 @app.route("/web/")
 def norest():
@@ -38,7 +42,3 @@ api.add_resource(simple_rest_test, '/')
 
 if __name__ == '__main__':
     socketio.run(app,debug=True)
-
-    
-
-    

@@ -12,8 +12,9 @@
     </div>
     <!-- scripts -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" ></script>
+     <link href="{{ url_for('static', filename='css/postputjsonprinter.css') }}" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.min.js"></script>
@@ -21,9 +22,30 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script type="text/jsx">
 
-
 /*** @jsx React.DOM */
 var socket = io.connect('http://localhost:5000');
+
+class PacketRender extends React.Component {
+    render () {
+	var pkt = JSON.parse(this.props.children)
+	var json_prettify = (json_in) => JSON.stringify(json_in,null,2)
+	return (
+		<div className="pkt_render">
+		<div className='timestamp'>{pkt.timestamp}</div>
+		<div className='method'>Method: {pkt.method}</div>
+		<div>ARGS
+		<pre className='args'>: {json_prettify(pkt.args)}</pre>
+		</div>
+		<div>FORM:
+	    	<pre className='form'> {json_prettify(pkt.form)}</pre>
+		</div>
+	    	<div>JSON:
+		<pre className='json'> {json_prettify(pkt.json)}</pre>
+		</div>
+		</div>
+	);
+    }
+}
 
 class req_json_pkt extends React.Component {
 
@@ -34,17 +56,15 @@ class req_json_pkt extends React.Component {
     
     componentDidMount() {
 	socket.on('postput_received', function(data) {
-	    console.log(data)
 	    var req_datas = this.state.req_datas;
-	    req_datas.unshift(JSON.stringify(data));
+	    req_datas.unshift(JSON.stringify(data,null,2));
 	    this.setState(req_datas);
 	}.bind(this));/*to not lose context*/
     }
     
     render() {
 	const req_list = this.state.req_datas.map((data,index) =>
-						  <div>
-					    <code key={index}>{data}</code></div>);
+						  <PacketRender>{data}</PacketRender>);
 	return (React.createElement('div',null,req_list));
     }
 }
@@ -54,7 +74,5 @@ ReactDOM.render(
     document.getElementById('content')
 );
     </script>
-   
-
   </body>
 </html>
