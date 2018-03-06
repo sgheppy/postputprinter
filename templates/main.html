@@ -11,6 +11,9 @@
       <div id="content"></div>
     </div>
     <!-- scripts -->
+    <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
      <link href="{{ url_for('static', filename='css/postputjsonprinter.css') }}" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -26,21 +29,28 @@
 var socket = io.connect('http://localhost:5000');
 
 class PacketRender extends React.Component {
+    componentDidMount () {
+	ReactDOM.findDOMNode(this).querySelectorAll('pre').forEach(
+	    function (currentValue){hljs.highlightBlock(currentValue)}
+	)
+    }
+
     render () {
+	const { children, className, language, style } = this.props
 	var pkt = JSON.parse(this.props.children)
 	var json_prettify = (json_in) => JSON.stringify(json_in,null,2)
 	return (
 		<div className="pkt_render">
-		<div className='timestamp'>{pkt.timestamp}</div>
-		<div className='method'>Method: {pkt.method}</div>
-		<div>ARGS
-		<pre className='args'>: {json_prettify(pkt.args)}</pre>
+		<div >{pkt.timestamp}</div>
+		<div >Method: {pkt.method}</div>
+		<div>ARGS:
+		<pre ><code>{json_prettify(pkt.args)}</code></pre>
 		</div>
 		<div>FORM:
-	    	<pre className='form'> {json_prettify(pkt.form)}</pre>
+	    	<pre ><code>{json_prettify(pkt.form)}</code></pre>
 		</div>
 	    	<div>JSON:
-		<pre className='json'> {json_prettify(pkt.json)}</pre>
+		<pre><code>{json_prettify(pkt.json)}</code></pre>
 		</div>
 		</div>
 	);
@@ -61,7 +71,6 @@ class req_json_pkt extends React.Component {
 	    this.setState(req_datas);
 	}.bind(this));/*to not lose context*/
     }
-    
     render() {
 	const req_list = this.state.req_datas.map((data,index) =>
 						  <PacketRender>{data}</PacketRender>);
