@@ -18,10 +18,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
     <script type="text/jsx">
 /*** @jsx React.DOM */
-var socket = io.connect('http://localhost:5000');
+namespace = '/'
+var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
 
 class req_json_pkt extends React.Component {
 
@@ -34,15 +35,27 @@ class req_json_pkt extends React.Component {
 	socket.on('postput_received', function(data) {
 	    console.log(data)
 	    var req_datas = this.state.req_datas;
-	    req_datas.unshift(JSON.stringify(data));
+	    req_datas.unshift(data);
 	    this.setState(req_datas);
 	}.bind(this));/*to not lose context*/
     }
-    
+
     render() {
+
 	const req_list = this.state.req_datas.map((data,index) =>
-						  <div>
-					    <code key={index}>{data}</code></div>);
+
+                    <div>
+                        <hr/>
+                        <p>{data[2]}: From {data[4]}, method {data[1]}</p>
+                        <p><strong>Headers:</strong>
+                            <pre>
+                                {data[3]}
+                            </pre>
+                        </p>
+                        <p><strong>Body:</strong>
+					        <pre key={index}>{JSON.stringify(data[0],undefined,2)}</pre>
+                        </p>
+                    </div>);
 	return (React.createElement('div',null,req_list));
     }
 }
