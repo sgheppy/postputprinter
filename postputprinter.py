@@ -9,9 +9,9 @@ import json
 
 import os
 
-SRV_PORT = os.environ.get("POSTPUSTPORT",8051)
-SRV_HOST = os.environ.get("POSTPUSHOST","0.0.0.0")
-SRV_DEBUG = os.environ.get("POSTPUSDEBUG",False)
+SRV_PORT = os.environ.get("POSTPUTPORT",8051)
+SRV_HOST = os.environ.get("POSTPUTHOST","0.0.0.0")
+SRV_DEBUG = os.environ.get("POSTPUTDEBUG",False)
 
 app = Flask(__name__)
 api = Api(app)
