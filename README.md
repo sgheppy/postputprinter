@@ -9,11 +9,11 @@ In a terminal
 ```
 python3 postputprinter.py
 ```
-Then open browser and go to `http://localhost:5000/web`.
+Then open browser and go to `http://localhost:8051/web`.
 
 In another terminal
 ```
- curl -XPOST -d '{"id": 121,"text": 18}' -H "Content-Type: application/json" http://localhost:5000/
+ curl -XPOST -d '{"id": 121,"text": 18}' -H "Content-Type: application/json" http://localhost:8051/
 ```
 Then you see the received JSON.
 
